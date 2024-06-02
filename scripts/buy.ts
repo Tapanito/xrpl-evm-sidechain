@@ -12,7 +12,7 @@ const main = async () => {
 
     await transaction.wait(1);
 
-    console.log("FooBarToken balance: " + await fooBarContract.balanceOf("<EVM_ACCOUNT_ADDRESS>" + " FooBars"));
+    console.log("FooBarToken balance: " + await fooBarContract.balanceOf("<ACCOUNT_ADDRESS>") + " FooBars");
 }
 
 main();

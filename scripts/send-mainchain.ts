@@ -7,10 +7,10 @@ import {
     EthersXChainProvider, EthersBridgeDoor, XrplXChainWallet, EthersXChainSigner, EthersXChainWallet, XrplXChainSigner
 } from "xchain-sdk";
 import {Client, Wallet, dropsToXrp} from "xrpl";
-import { providers,Wallet as EthersWallet, utils as etherUtils } from "ethers";
+import { providers, Wallet as EthersWallet, utils as etherUtils } from "ethers";
 
 const MAINCHAIN_NODE_URL = "wss://s.devnet.rippletest.net:51233";
-const SIDECHAIN_NODE_URL = "http://168.119.63.112:8545";
+const SIDECHAIN_NODE_URL = "https://rpc-evm-sidechain.xrpl.org";
 
 const MAINCHAIN_PROVIDER = new XrplXChainProvider(new Client(MAINCHAIN_NODE_URL));
 const SIDECHAIN_PROVIDER = new EthersXChainProvider(new providers.JsonRpcProvider(SIDECHAIN_NODE_URL));
@@ -32,8 +32,6 @@ async function main() {
 
     const xChainBridges = await bridgeManager.getXChainBridges();
 
-    const xChainBridge = xChainBridges.find(
-        (xChainBridge) => xChainBridge.lockingChain.forEvm().issue.issuer == "")
 
     const originSigner = new XrplXChainSigner(Wallet.fromSeed("<XRP_SEED>"), MAINCHAIN_PROVIDER);
     const originWallet = new XrplXChainWallet(originSigner);
@@ -52,7 +50,7 @@ async function main() {
     const bridge = new Bridge(BridgeDirection.LOCKING_TO_ISSUING, xChainBridges[0]!);
 
     try {
-        const amount = "5";
+        const amount = "10";
         console.log("Transfering " + amount + " XRP" + " from: " + bridge.origin + " to: " + bridge.destination + " chain");
         await bridgeManager.transfer(bridge, originWallet, destinationWallet, amount);
         console.log("XChain transaction success\n");
